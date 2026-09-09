@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài Tập Phát Âm & Trọng Âm - Ms Lê Hằng English</title>
+  <style>
+    /* =========================================================
+       1. CẤU HÌNH GIAO DIỆN CHÍNH & NỀN TEAL TƯƠI MÁT
+       ========================================================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #00B4A2;
+      background: linear-gradient(135deg, #00B4A2 0%, #008075 100%);
+      min-height: 100vh;
+      padding: 20px 15px 60px 15px;
+      position: relative;
+      color: #2C3E50;
+      overflow-x: hidden;
+    }
+
+    /* Họa tiết SVG lơ lửng ẩn hiện trên nền */
+    .bg-decorations {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .svg-icon {
+      position: absolute;
+      opacity: 0.18;
+      fill: #ffffff;
+      animation: float 12s infinite ease-in-out;
+    }
+
+    .icon-1 { top: 8%; left: 5%; width: 65px; animation-duration: 10s; }
+    .icon-2 { top: 20%; right: 8%; width: 80px; animation-duration: 14s; animation-delay: 1s; }
+    .icon-3 { bottom: 15%; left: 8%; width: 75px; animation-duration: 11s; animation-delay: 2s; }
+    .icon-4 { bottom: 10%; right: 6%; width: 70px; animation-duration: 13s; animation-delay: 3s; }
+    .icon-5 { top: 55%; left: 3%; width: 50px; animation-duration: 9s; animation-delay: 1.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    /* =========================================================
+       2. HEADER & KHUNG THÔNG BÁO LỜI NHẮC
+       ========================================================= */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .teacher-tag {
+      text-align: center;
+      color: #E0F2F1;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .warning-box {
+      background: rgba(255, 248, 225, 0.95);
+      border: 2px dashed #FFB800;
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 25px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      backdrop-filter: blur(5px);
+    }
+
+    .warning-title {
+      color: #D35400;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .warning-text {
+      color: #795548;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .warning-footer {
+      margin-top: 8px;
+      color: #C0392B;
+      font-weight: 800;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    /* =========================================================
+       3. THẺ CÂU HỎI CHÍNH (GLASS MORPHISM CARD)
+       ========================================================= */
+    .question-card {
+      background: rgba(255, 255, 255, 0.93);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+      padding: 24px;
+      margin-bottom: 30px;
+      transition: transform 0.2s ease;
+    }
+
+    /* Khung Tiêu Đề Câu Hỏi */
+    .question-header {
+      background: #004D40;
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #FFD54F;
+    }
+
+    .word-list-row {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #FFFFFF;
+    }
+
+    .word-list-row u {
+      text-decoration-color: #FFD54F;
+      text-decoration-thickness: 2px;
+    }
+
+    /* =========================================================
+       4. HỆ THỐNG NÚT CHỌN ĐÁP ÁN (2x2 GRID & 3D BUTTONS)
+       ========================================================= */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background: #F0F7F7;
+      color: #2C3E50;
+      border: 2px solid #B2DFDB;
+      border-radius: 16px;
+      padding: 16px 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #80CBC4;
+      transition: all 0.12s ease;
+      text-align: center;
+      outline: none;
+      position: relative;
+      top: 0;
+      user-select: none;
+    }
+
+    .option-btn u {
+      text-decoration-color: #E74C3C;
+      text-decoration-thickness: 2px;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      top: -2px;
+      box-shadow: 0 7px 0 #80CBC4;
+      background: #E0F2F1;
+    }
+
+    .option-btn:active:not(.disabled) {
+      top: 3px;
+      box-shadow: 0 2px 0 #80CBC4;
+    }
+
+    /* Trạng thái chọn ĐÚNG */
+    .option-btn.correct {
+      background: #00D26A !important;
+      color: #FFFFFF !important;
+      border-color: #00B058 !important;
+      box-shadow: 0 5px 0 #008A45 !important;
+    }
+    .option-btn.correct u {
+      text-decoration-color: #FFFFFF !important;
+    }
+
+    /* Trạng thái chọn SAI */
+    .option-btn.incorrect {
+      background: #FF4757 !important;
+      color: #FFFFFF !important;
+      border-color: #E03343 !important;
+      box-shadow: 0 5px 0 #B3202E !important;
+    }
+    .option-btn.incorrect u {
+      text-decoration-color: #FFFFFF !important;
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       5. KHUNG GIẢI THÍCH CHI TIẾT
+       ========================================================= */
+    .explanation-box {
+      display: none;
+      background: #FFFFFF;
+      border-radius: 16px;
+      border-left: 6px solid #FF9F43;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-top: 20px;
+      animation: fadeInSlide 0.35s ease-out forwards;
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .explanation-banner {
+      background: #FFF9E6;
+      border: 1.5px dashed #FFB800;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: #D68910;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 0.98rem;
+    }
+
+    .explanation-content {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: #2C3E50;
+    }
+
+    .explanation-section-title {
+      font-weight: 700;
+      color: #2C3E50;
+      margin-bottom: 6px;
+    }
+
+    .explanation-list {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 14px;
+    }
+
+    .explanation-list li {
+      margin-bottom: 6px;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .explanation-list li::before {
+      content: "•";
+      position: absolute;
+      left: 4px;
+      color: #FF9F43;
+      font-size: 1.2rem;
+    }
+
+    .en-word {
+      color: #1B9CFC;
+      font-weight: 700;
+    }
+
+    .ipa-box {
+      background: #EDE7F6;
+      color: #673AB7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    .vn-meaning {
+      color: #D35400;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .reason-box {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #E0E0E0;
+    }
+
+    /* =========================================================
+       6. NÚT TỔNG KẾT & MODAL POPUP
+       ========================================================= */
+    .summary-section {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn-summary {
+      background: #FF9F43;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 36px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #E67E22, 0 10px 20px rgba(0,0,0,0.15);
+      transition: all 0.15s ease;
+    }
+
+    .btn-summary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #E67E22, 0 12px 24px rgba(0,0,0,0.2);
+      background: #FFAA56;
+    }
+
+    .btn-summary:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #E67E22;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #004D40;
+      margin-bottom: 10px;
+    }
+
+    .modal-score {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #00B4A2;
+      margin: 15px 0;
+    }
+
+    .modal-message {
+      font-size: 1.05rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .btn-close {
+      background: #004D40;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background SVG Decorations -->
+  <div class="bg-decorations">
+    <svg class="svg-icon icon-1" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    <svg class="svg-icon icon-2" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.83 12 21c.52 0 1.04-.08 1.54-.24C4.25 19.94 2.8 18.16 2 16c0 0 4.5-1 9-5.5S15 2 15 2s1 4.5 5.5 9c1.39 1.39 2.18 3.1 2.42 4.86C22.61 14.82 22 13.43 22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 2.12.66 4.09 1.78 5.72L2 20l2.28-1.78C5.91 19.34 7.88 20 10 20c.5 0 .99-.04 1.48-.12C10.42 18.27 10 16.2 10 14c0-3.31 2.69-6 6-6h1z"/></svg>
+    <svg class="svg-icon icon-3" viewBox="0 0 24 24"><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8C6.25 13.93 6 12.99 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.45.87.7 1.81.7 2.80 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>
+    <svg class="svg-icon icon-4" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L3 21l3.39-1.97C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 14v-4H9l3-7 1 4h2l-4 7z"/></svg>
+    <svg class="svg-icon icon-5" viewBox="0 0 24 24"><path d="M6.05 8.05c-2.73 2.73-2.73 7.15 0 9.88 2.73 2.73 7.15 2.73 9.88 0 2.73-2.73 2.73-7.15 0-9.88-2.73-2.74-7.15-2.74-9.88 0zM15 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="teacher-tag">Giáo viên tạo: Ms Lê Hằng English</div>
+      <div class="warning-box">
+        <div class="warning-title">⚠️ LỜI NHẮC CỰC KỲ QUAN TRỌNG ⚠️</div>
+        <p class="warning-text">Chỉ có đọc kỹ giải thích ngay sau mỗi câu, sau đó ghi lại từ vựng/cấu trúc mới vào vở để học thì mới thực sự giỏi lên.</p>
+        <p class="warning-text">Làm cho xong mà không đọc giải thích hay đọc qua loa không ghi chép thì chỉ tốn thời gian vô ích!</p>
+        <div class="warning-footer">* Kéo tới đâu, làm tới đó! *</div>
+      </div>
+    </header>
+
+    <main id="quizContainer"></main>
+
+    <div class="summary-section">
+      <button class="btn-summary" onclick="showSummary()">🏆 TỔNG KẾT KẾT QUẢ</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="summaryModal">
+    <div class="modal-content">
+      <div class="modal-icon" id="modalIcon">🌟</div>
+      <div class="modal-title">KẾT QUẢ BÀI LÀM</div>
+      <div class="modal-score" id="modalScore">0 / 0</div>
+      <div class="modal-message" id="modalMessage">Hãy cố gắng hoàn thành các câu hỏi nhé!</div>
+      <button class="btn-close" onclick="closeSummary()">Đóng & Làm lại</button>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. DỮ LIỆU CÂU HỎI TỪ ĐỀ BÀI (HOÀN CHỈNH 4 CÂU)
+       ========================================================= */
+    const quizData = [
+      /* --- PHẦN I: PRONUNCIATION --- */
+      {
+        id: 1,
+        titleNumber: "CÂU 1 (PHÁT ÂM):",
+        headerWordsDisplay: "str<u>e</u>ssed &nbsp;|&nbsp; t<u>e</u>nse &nbsp;|&nbsp; conc<u>e</u>ntrate &nbsp;|&nbsp; s<u>e</u>lf-aware",
+        instructionText: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+        correctWord: "concentrate",
+        options: [
+          { word: "stressed", displayHTML: "str<u>e</u>ssed" },
+          { word: "tense", displayHTML: "t<u>e</u>nse" },
+          { word: "concentrate", displayHTML: "conc<u>e</u>ntrate" },
+          { word: "self-aware", displayHTML: "s<u>e</u>lf-aware" }
+        ],
+        explanation: {
+          analysis: [
+            { word: "stressed", pos: "(adj)", ipa: "/e/", meaning: "căng thẳng, áp lực." },
+            { word: "tense", pos: "(adj)", ipa: "/e/", meaning: "căng thẳng, hồi hộp." },
+            { word: "concentrate", pos: "(v)", ipa: "/ə/", meaning: "tập trung." },
+            { word: "self-aware", pos: "(adj)", ipa: "/e/", meaning: "tự nhận thức." }
+          ],
+          why: "Phần gạch chân ở <span class='en-word'>concentrate</span> phát âm là <span class='ipa-box'>[ /ə/ ]</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>[ /e/ ]</span>."
+        }
+      },
+      {
+        id: 2,
+        titleNumber: "CÂU 2 (PHÁT ÂM):",
+        headerWordsDisplay: "gr<u>ea</u>t &nbsp;|&nbsp; tr<u>ea</u>sure &nbsp;|&nbsp; m<u>ea</u>sure &nbsp;|&nbsp; pl<u>ea</u>sure",
+        instructionText: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+        correctWord: "great",
+        options: [
+          { word: "great", displayHTML: "gr<u>ea</u>t" },
+          { word: "treasure", displayHTML: "tr<u>ea</u>sure" },
+          { word: "measure", displayHTML: "m<u>ea</u>sure" },
+          { word: "pleasure", displayHTML: "pl<u>ea</u>sure" }
+        ],
+        explanation: {
+          analysis: [
+            { word: "great", pos: "(adj)", ipa: "/eɪ/", meaning: "tuyệt vời, to lớn." },
+            { word: "treasure", pos: "(n)", ipa: "/e/", meaning: "kho báu." },
+            { word: "measure", pos: "(v/n)", ipa: "/e/", meaning: "đo lường, biện pháp." },
+            { word: "pleasure", pos: "(n)", ipa: "/e/", meaning: "niềm vui thích, sự hài lòng." }
+          ],
+          why: "Phần gạch chân ở <span class='en-word'>great</span> phát âm là <span class='ipa-box'>[ /eɪ/ ]</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>[ /e/ ]</span>."
+        }
+      },
+
+      /* --- PHẦN II: STRESS --- */
+      {
+        id: 3,
+        titleNumber: "CÂU 3 (TRỌNG ÂM):",
+        headerWordsDisplay: "barefoot &nbsp;|&nbsp; promote &nbsp;|&nbsp; observe &nbsp;|&nbsp; respect",
+        instructionText: "Chọn từ có trọng âm khác với các từ còn lại.",
+        correctWord: "barefoot",
+        options: [
+          { word: "barefoot", displayHTML: "barefoot" },
+          { word: "promote", displayHTML: "promote" },
+          { word: "observe", displayHTML: "observe" },
+          { word: "respect", displayHTML: "respect" }
+        ],
+        explanation: {
+          analysis: [
+            { word: "barefoot", pos: "(adj/adv)", ipa: "/ˈbeə.fʊt/", meaning: "trọng âm rơi vào âm tiết thứ 1." },
+            { word: "promote", pos: "(v)", ipa: "/prəˈməʊt/", meaning: "trọng âm rơi vào âm tiết thứ 2." },
+            { word: "observe", pos: "(v)", ipa: "/əbˈzɜːv/", meaning: "trọng âm rơi vào âm tiết thứ 2." },
+            { word: "respect", pos: "(v/n)", ipa: "/rɪˈspekt/", meaning: "trọng âm rơi vào âm tiết thứ 2." }
+          ],
+          why: "<span class='en-word'>barefoot</span> có trọng âm rơi vào âm tiết thứ 1, trong khi các từ còn lại có trọng âm rơi vào âm tiết thứ 2."
+        }
+      },
+      {
+        id: 4,
+        titleNumber: "CÂU 4 (TRỌNG ÂM):",
+        headerWordsDisplay: "performance &nbsp;|&nbsp; experience &nbsp;|&nbsp; confidence &nbsp;|&nbsp; religious",
+        instructionText: "Chọn từ có trọng âm khác với các từ còn lại.",
+        correctWord: "confidence",
+        options: [
+          { word: "performance", displayHTML: "performance" },
+          { word: "experience", displayHTML: "experience" },
+          { word: "confidence", displayHTML: "confidence" },
+          { word: "religious", displayHTML: "religious" }
+        ],
+        explanation: {
+          analysis: [
+            { word: "performance", pos: "(n)", ipa: "/pəˈfɔː.məns/", meaning: "trọng âm rơi vào âm tiết thứ 2." },
+            { word: "experience", pos: "(n/v)", ipa: "/ɪkˈspɪə.ri.əns/", meaning: "trọng âm rơi vào âm tiết thứ 2." },
+            { word: "confidence", pos: "(n)", ipa: "/ˈkɒn.fɪ.dəns/", meaning: "trọng âm rơi vào âm tiết thứ 1." },
+            { word: "religious", pos: "(adj)", ipa: "/rɪˈlɪdʒ.əs/", meaning: "trọng âm rơi vào âm tiết thứ 2." }
+          ],
+          why: "<span class='en-word'>confidence</span> có trọng âm rơi vào âm tiết thứ 1, trong khi các từ còn lại có trọng âm rơi vào âm tiết thứ 2."
+        }
+      }
+    ];
+
+    let userAnswers = {};
+
+    /* =========================================================
+       2. WEB AUDIO API - TẠO ÂM THANH THUẦN CODE JAVASCRIPT
+       ========================================================= */
+    function playSound(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        if (type === 'correct') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+          
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } else if (type === 'incorrect') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25);
+          
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.28);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.28);
+        }
+      } catch (e) {
+        console.log("Audio not supported or restricted");
+      }
+    }
+
+    /* =========================================================
+       3. THUẬT TOÁN SHUFFLE XÁO TRỘN ĐÁP ÁN (FISHER-YATES)
+       ========================================================= */
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    /* =========================================================
+       4. HIỂN THỊ DỮ LIỆU BÀI TẬP LÊN GIAO DIỆN
+       ========================================================= */
+    function renderQuiz() {
+      const quizContainer = document.getElementById('quizContainer');
+      quizContainer.innerHTML = '';
+
+      quizData.forEach((qData) => {
+        const shuffledOptions = shuffleArray(qData.options);
+
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${qData.id}`;
+
+        let analysisHTML = '';
+        qData.explanation.analysis.forEach(item => {
+          analysisHTML += `
+            <li>
+              <span class="en-word">${item.word}</span> 
+              <span style="color:#666;">${item.pos}</span> 
+              <span class="ipa-box">${item.ipa}</span>: 
+              <span class="vn-meaning">${item.meaning}</span>
+            </li>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="question-header">
+            <div class="question-title">
+              🌟 ${qData.titleNumber}
+            </div>
+            <div class="word-list-row">
+              ${qData.headerWordsDisplay}
+            </div>
+          </div>
+
+          <div class="options-grid" id="grid-${qData.id}">
+            ${shuffledOptions.map((opt) => `
+              <button class="option-btn" 
+                      data-word="${opt.word}" 
+                      onclick="checkAnswer(${qData.id}, '${opt.word}')">
+                ${opt.displayHTML}
+              </button>
+            `).join('')}
+          </div>
+
+          <div class="explanation-box" id="explanation-${qData.id}">
+            <div class="explanation-banner">
+              ${qData.instructionText}
+            </div>
+            <div class="explanation-content">
+              <div class="explanation-section-title">1. Phân tích 4 đáp án:</div>
+              <ul class="explanation-list">
+                ${analysisHTML}
+              </ul>
+              <div class="reason-box">
+                <div class="explanation-section-title">2. Tại sao chọn ${qData.correctWord}?</div>
+                <div>${qData.explanation.why}</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        quizContainer.appendChild(card);
+      });
+    }
+
+    /* =========================================================
+       5. CHẤM ĐIỂM TỨC THÌ KHI CLICK CHỌN
+       ========================================================= */
+    function checkAnswer(questionId, selectedWord) {
+      if (userAnswers[questionId] !== undefined) return;
+
+      const qData = quizData.find(q => q.id === questionId);
+      const isCorrect = (selectedWord === qData.correctWord);
+      userAnswers[questionId] = isCorrect;
+
+      const grid = document.getElementById(`grid-${questionId}`);
+      const buttons = grid.querySelectorAll('.option-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.add('disabled');
+        const btnWord = btn.getAttribute('data-word');
+
+        if (btnWord === selectedWord) {
+          if (isCorrect) {
+            btn.classList.add('correct');
+          } else {
+            btn.classList.add('incorrect');
+          }
+        }
+
+        if (!isCorrect && btnWord === qData.correctWord) {
+          btn.classList.add('correct');
+        }
+      });
+
+      if (isCorrect) {
+        playSound('correct');
+      } else {
+        playSound('incorrect');
+      }
+
+      const expBox = document.getElementById(`explanation-${questionId}`);
+      if (expBox) {
+        expBox.style.display = 'block';
+      }
+    }
+
+    /* =========================================================
+       6. TỔNG KẾT & HIỂN THỊ MODAL
+       ========================================================= */
+    function showSummary() {
+      const total = quizData.length;
+      let correctCount = 0;
+
+      Object.keys(userAnswers).forEach(qId => {
+        if (userAnswers[qId] === true) correctCount++;
+      });
+
+      const modalScore = document.getElementById('modalScore');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalIcon = document.getElementById('modalIcon');
+
+      modalScore.innerText = `${correctCount} / ${total}`;
+
+      if (correctCount === total && total > 0) {
+        modalIcon.innerText = "🏆";
+        modalMessage.innerHTML = "<strong>Xuất sắc!</strong> Em đã trả lời đúng tất cả các câu hỏi và ghi chép kiến thức rất chăm chỉ!";
+      } else if (correctCount > 0) {
+        modalIcon.innerText = "🎉";
+        modalMessage.innerHTML = "<strong>Khá lắm!</strong> Nhớ chép lại các từ vựng và quy tắc trọng âm chưa làm đúng vào vở để học nhé!";
+      } else {
+        modalIcon.innerText = "💪";
+        modalMessage.innerHTML = "<strong>Hãy cố gắng hơn!</strong> Click vào các lựa chọn để xem giải thích chi tiết và ghi chép đầy đủ nhé!";
+      }
+
+      document.getElementById('summaryModal').style.display = 'flex';
+    }
+
+    function closeSummary() {
+      document.getElementById('summaryModal').style.display = 'none';
+    }
+
+    window.onload = function() {
+      renderQuiz();
+    };
+  </script>
+</body>
+</html>
